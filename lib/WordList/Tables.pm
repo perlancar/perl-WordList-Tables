@@ -5,6 +5,8 @@ package WordList::Tables;
 # DIST
 # VERSION
 
+use strict;
+use warnings;
 use parent qw(WordList);
 
 our $DYNAMIC = 1;
@@ -38,24 +40,24 @@ sub new {
     (my $mod_pm = "$mod.pm") =~ s!::!/!g;
     require $mod_pm;
     $self->{_table} = $mod->new;
-    my $columns = $self->{_table}->get_column_names;
+    my @columns = $self->{_table}->get_column_names;
     my $found;
-    for my $i (0..$#{ $columns }) {
+    for my $i (0..$#columns) {
         if ($self->{params}{column} =~ /\A[0-9]+\z/ && $self->{params}{column} == $i ||
-                $self->{params}{column} eq $columns->[$i]) {
+                $self->{params}{column} eq $columns[$i]) {
             $self->{_colidx} = $i;
             $found++;
             last;
         }
     }
     die "Unknown column '$self->{params}{column}' in table module $mod, ".
-        "available columns are: ".join(", ", @$columns) unless $found;
+        "available columns are: ".join(", ", @columns) unless $found;
     $self;
 }
 
 sub next_word {
     my $self = shift;
-    my $row = $self->{_table}->get_word_arrayref;
+    my $row = $self->{_table}->get_row_arrayref;
     return unless $row;
     $row->[ $self->{_colidx} ];
 }
