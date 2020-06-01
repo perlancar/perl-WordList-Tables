@@ -77,6 +77,18 @@ sub reset_iterator {
  my $wl = WordList::Tables->new(table => 'Locale::US::States', column => 'name');
  say $wl->first_word; # Alaska
 
+On the command-line, using the L<wordlist> CLI:
+
+ % wordlist -w Tables=table,Locale::US::States,column,name
+ Alaska
+ Alabama
+ ...
+
+ % wordlist -w Tables=table,Locale::US::States,column,code
+ AK
+ AL
+ ...
+
 
 =head1 DESCRIPTION
 
